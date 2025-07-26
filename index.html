@@ -31,7 +31,7 @@
             background: linear-gradient(135deg, var(--darker), var(--dark));
             color: var(--light);
             min-height: 100vh;
-            padding: 20px;
+            padding: 15px;
             background-image:
                 radial-gradient(circle at 10% 20%, rgba(14, 165, 233, 0.1) 0%, transparent 20%),
                 radial-gradient(circle at 90% 80%, rgba(168, 85, 247, 0.1) 0%, transparent 20%);
@@ -41,13 +41,13 @@
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 20px;
+            padding: 15px;
         }
 
         header {
             text-align: center;
-            margin-bottom: 40px;
-            padding: 20px 0;
+            margin-bottom: 30px;
+            padding: 15px 0;
             position: relative;
         }
 
@@ -63,42 +63,51 @@
         }
 
         h1 {
-            font-size: 3.5rem;
+            font-size: 2.5rem;
             font-weight: 700;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             background: linear-gradient(90deg, var(--primary), var(--secondary));
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
             text-shadow: var(--glow);
-            letter-spacing: 2px;
+            letter-spacing: 1px;
         }
 
         .subtitle {
-            font-size: 1.2rem;
+            font-size: 1rem;
             color: #94a3b8;
             font-weight: 300;
-            margin-top: 10px;
+            margin-top: 8px;
         }
 
         .content {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 30px;
-            margin-top: 30px;
+            gap: 20px;
+            margin-top: 20px;
         }
 
         @media (max-width: 768px) {
             .content {
                 grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .subtitle {
+                font-size: 0.9rem;
             }
         }
 
         .card {
             background: var(--card-bg);
-            border-radius: 15px;
-            padding: 25px;
-            box-shadow: 0 8px 32px rgba(2, 8, 20, 0.4);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 6px 24px rgba(2, 8, 20, 0.3);
             border: 1px solid rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(10px);
             transition: var(--transition);
@@ -106,16 +115,16 @@
 
         .card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 12px 40px rgba(14, 165, 233, 0.3);
+            box-shadow: 0 8px 32px rgba(14, 165, 233, 0.25);
         }
 
         .card-title {
-            font-size: 1.5rem;
-            margin-bottom: 20px;
+            font-size: 1.3rem;
+            margin-bottom: 15px;
             color: var(--primary);
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
         }
 
         .card-title i {
@@ -123,24 +132,24 @@
         }
 
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
 
         label {
             display: block;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             color: #94a3b8;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
         }
 
         input, select {
             width: 100%;
-            padding: 12px 15px;
+            padding: 10px 12px;
             background: rgba(15, 23, 42, 0.7);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 8px;
+            border-radius: 6px;
             color: var(--light);
-            font-size: 1rem;
+            font-size: 0.95rem;
             transition: var(--transition);
         }
 
@@ -154,14 +163,14 @@
             background: linear-gradient(135deg, var(--primary), var(--secondary));
             color: white;
             border: none;
-            padding: 14px 20px;
+            padding: 12px 18px;
             border-radius: 8px;
             font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
             width: 100%;
             transition: var(--transition);
-            margin-top: 10px;
+            margin-top: 8px;
             letter-spacing: 1px;
         }
 
@@ -182,13 +191,13 @@
 
         .matches-list {
             list-style: none;
-            max-height: 400px;
+            max-height: 380px;
             overflow-y: auto;
-            padding-right: 10px;
+            padding-right: 8px;
         }
 
         .matches-list::-webkit-scrollbar {
-            width: 6px;
+            width: 5px;
         }
 
         .matches-list::-webkit-scrollbar-track {
@@ -203,9 +212,9 @@
 
         .match-item {
             background: rgba(15, 23, 42, 0.5);
-            border-radius: 10px;
-            padding: 15px;
-            margin-bottom: 15px;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 12px;
             cursor: pointer;
             transition: var(--transition);
             border: 1px solid rgba(255, 255, 255, 0.05);
@@ -219,32 +228,32 @@
         .match-header {
             display: flex;
             align-items: center;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
 
         .avatar {
-            width: 50px;
-            height: 50px;
+            width: 42px;
+            height: 42px;
             border-radius: 50%;
             background: linear-gradient(135deg, var(--primary), var(--secondary));
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             font-weight: bold;
-            margin-right: 15px;
+            margin-right: 12px;
         }
 
         .match-name {
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             font-weight: 600;
         }
 
         .match-details {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            font-size: 0.9rem;
+            gap: 8px;
+            font-size: 0.85rem;
             color: #94a3b8;
         }
 
@@ -263,21 +272,21 @@
             background: rgba(2, 6, 23, 0.9);
             z-index: 1000;
             overflow-y: auto;
-            padding: 20px;
+            padding: 15px;
         }
 
         .modal-content {
             background: var(--darker);
             max-width: 800px;
-            margin: 40px auto;
-            border-radius: 15px;
+            margin: 30px auto;
+            border-radius: 12px;
             border: 1px solid rgba(14, 165, 233, 0.3);
             box-shadow: var(--glow);
             overflow: hidden;
         }
 
         .modal-header {
-            padding: 20px;
+            padding: 18px;
             background: rgba(14, 165, 233, 0.1);
             border-bottom: 1px solid rgba(14, 165, 233, 0.3);
             display: flex;
@@ -286,7 +295,7 @@
         }
 
         .modal-title {
-            font-size: 1.8rem;
+            font-size: 1.6rem;
             color: var(--primary);
         }
 
@@ -304,77 +313,77 @@
         }
 
         .modal-body {
-            padding: 25px;
-            line-height: 1.8;
+            padding: 20px;
+            line-height: 1.7;
         }
 
         .report-section {
-            margin-bottom: 25px;
+            margin-bottom: 20px;
         }
 
         .report-section h3 {
             color: var(--primary);
-            margin-bottom: 15px;
-            padding-bottom: 10px;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
             border-bottom: 1px solid rgba(14, 165, 233, 0.2);
         }
 
         .compatibility-meter {
-            height: 10px;
+            height: 8px;
             background: rgba(255, 255, 255, 0.1);
-            border-radius: 5px;
-            margin: 15px 0;
+            border-radius: 4px;
+            margin: 12px 0;
             overflow: hidden;
         }
 
         .compatibility-level {
             height: 100%;
             background: linear-gradient(90deg, var(--secondary), var(--primary));
-            border-radius: 5px;
+            border-radius: 4px;
             width: 85%;
         }
 
         footer {
             text-align: center;
-            margin-top: 40px;
-            padding: 20px;
+            margin-top: 30px;
+            padding: 15px;
             color: #64748b;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
         }
 
         .pwa-install {
             position: fixed;
-            bottom: 20px;
-            right: 20px;
+            bottom: 15px;
+            right: 15px;
             background: var(--primary);
             color: white;
             border: none;
             border-radius: 50%;
-            width: 50px;
-            height: 50px;
+            width: 45px;
+            height: 45px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.5rem;
+            font-size: 1.4rem;
             cursor: pointer;
-            box-shadow: 0 4px 12px rgba(14, 165, 233, 0.4);
+            box-shadow: 0 4px 10px rgba(14, 165, 233, 0.3);
             z-index: 100;
             transition: var(--transition);
         }
 
         .pwa-install:hover {
             transform: scale(1.1);
-            box-shadow: 0 6px 16px rgba(14, 165, 233, 0.6);
+            box-shadow: 0 6px 14px rgba(14, 165, 233, 0.5);
         }
 
         /* 加载动画 */
         .loader {
             display: none;
-            width: 50px;
-            height: 50px;
-            margin: 20px auto;
-            border: 5px solid rgba(14, 165, 233, 0.3);
-            border-top: 5px solid var(--primary);
+            width: 40px;
+            height: 40px;
+            margin: 15px auto;
+            border: 4px solid rgba(14, 165, 233, 0.3);
+            border-top: 4px solid var(--primary);
             border-radius: 50%;
             animation: spin 1s linear infinite;
         }
@@ -382,6 +391,25 @@
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
+        }
+
+        /* 进度条 */
+        .progress-container {
+            display: none;
+            width: 100%;
+            background: rgba(15, 23, 42, 0.7);
+            border-radius: 8px;
+            height: 12px;
+            margin: 15px 0;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            border-radius: 8px;
+            width: 0;
+            transition: width 0.4s ease;
         }
 
         /* 添加科技感元素 */
@@ -394,7 +422,7 @@
             background-image:
                 linear-gradient(rgba(14, 165, 233, 0.05) 1px, transparent 1px),
                 linear-gradient(90deg, rgba(14, 165, 233, 0.05) 1px, transparent 1px);
-            background-size: 30px 30px;
+            background-size: 25px 25px;
             z-index: -1;
             opacity: 0.3;
         }
@@ -438,18 +466,104 @@
 
         .api-status {
             text-align: center;
-            margin-top: 10px;
-            font-size: 0.9rem;
+            margin-top: 8px;
+            font-size: 0.85rem;
             color: #94a3b8;
         }
 
         .error-message {
             color: #f87171;
             background: rgba(248, 113, 113, 0.1);
-            padding: 10px;
-            border-radius: 8px;
-            margin-top: 10px;
+            padding: 8px;
+            border-radius: 6px;
+            margin-top: 8px;
             display: none;
+            font-size: 0.9rem;
+        }
+
+        .user-notice {
+            background: rgba(14, 165, 233, 0.1);
+            border: 1px solid rgba(14, 165, 233, 0.3);
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+            color: var(--primary);
+            display: none;
+        }
+
+        /* 安装指南样式 */
+        .install-guide {
+            position: fixed;
+            bottom: 70px;
+            right: 15px;
+            background: var(--darker);
+            border: 1px solid var(--primary);
+            border-radius: 12px;
+            padding: 20px;
+            width: 300px;
+            box-shadow: 0 8px 32px rgba(2, 8, 20, 0.4);
+            z-index: 100;
+            display: none;
+        }
+
+        .install-guide h3 {
+            color: var(--primary);
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+
+        .install-steps {
+            list-style: none;
+            margin-bottom: 15px;
+        }
+
+        .install-steps li {
+            margin-bottom: 10px;
+            padding-left: 25px;
+            position: relative;
+        }
+
+        .install-steps li:before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        .install-browser {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .browser-btn {
+            flex: 1;
+            background: rgba(14, 165, 233, 0.2);
+            border: 1px solid var(--primary);
+            color: var(--light);
+            padding: 8px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: var(--transition);
+            text-align: center;
+            font-size: 0.85rem;
+        }
+
+        .browser-btn:hover {
+            background: rgba(14, 165, 233, 0.4);
+        }
+
+        .close-guide {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            color: #94a3b8;
+            font-size: 1.2rem;
+            cursor: pointer;
         }
     </style>
 </head>
@@ -467,6 +581,7 @@
             <!-- 左侧卡片 - 个人信息输入 -->
             <div class="card">
                 <h2 class="card-title"><i>🔮</i> 我的命理探索</h2>
+                <div class="user-notice" id="user-notice">检测到您已注册，个人信息已自动填充</div>
                 <div class="form-group">
                     <label for="phone">我的ID（电话号码）</label>
                     <input type="tel" id="phone" placeholder="请输入您的电话号码" required>
@@ -502,6 +617,9 @@
                 </div>
 
                 <button id="generate-btn" class="btn">查看我的人生密码</button>
+                <div class="progress-container" id="progress-container">
+                    <div class="progress-bar" id="progress-bar"></div>
+                </div>
                 <div class="loader" id="loader"></div>
                 <div class="error-message" id="error-message"></div>
                 <div class="api-status" id="api-status">API状态: 准备就绪</div>
@@ -522,6 +640,24 @@
     </div>
 
     <button class="pwa-install" id="install-btn" title="安装应用">📱</button>
+
+    <!-- 安装指南 -->
+    <div class="install-guide" id="install-guide">
+        <button class="close-guide" id="close-guide">&times;</button>
+        <h3>安装应用指南</h3>
+        <p>根据您使用的浏览器，请按照以下步骤安装应用：</p>
+        <ul class="install-steps">
+            <li>点击浏览器菜单（右上角三个点或更多选项）</li>
+            <li>选择"添加到主屏幕"或"安装应用"</li>
+            <li>确认安装</li>
+        </ul>
+        <p>或者使用以下快捷方式：</p>
+        <div class="install-browser">
+            <div class="browser-btn" id="chrome-install">Chrome</div>
+            <div class="browser-btn" id="safari-install">Safari</div>
+            <div class="browser-btn" id="huawei-install">华为浏览器</div>
+        </div>
+    </div>
 
     <!-- 人生密码报告弹窗 -->
     <div id="report-modal" class="modal">
@@ -701,6 +837,20 @@
             document.getElementById('match-modal').style.display = 'block';
         }
 
+        // 模拟进度条
+        function simulateProgress() {
+            const progressBar = document.getElementById('progress-bar');
+            let width = 0;
+            const interval = setInterval(() => {
+                if (width >= 100) {
+                    clearInterval(interval);
+                    return;
+                }
+                width += 5;
+                progressBar.style.width = width + '%';
+            }, 150);
+        }
+
         // 调用DeepSeek API生成命理报告
         async function generateLifeReport() {
             // 获取表单数据
@@ -715,16 +865,28 @@
                 return;
             }
 
+            // 检查是否已有存储的报告
+            const userData = getUserData(phone);
+            if (userData && userData.report) {
+                showLifeReport(userData.report);
+                return;
+            }
+
             // 显示加载状态
             const loader = document.getElementById('loader');
             const generateBtn = document.getElementById('generate-btn');
             const apiStatus = document.getElementById('api-status');
             const errorMsg = document.getElementById('error-message');
+            const progressContainer = document.getElementById('progress-container');
 
-            loader.style.display = 'block';
-            generateBtn.disabled = true;
-            apiStatus.textContent = "API状态: 请求中...";
+            // 隐藏按钮，显示进度条
+            generateBtn.style.display = 'none';
+            progressContainer.style.display = 'block';
+            apiStatus.textContent = "API状态: 等待解码...";
             errorMsg.style.display = 'none';
+
+            // 开始模拟进度条
+            simulateProgress();
 
             try {
                 // 构造用户输入信息
@@ -779,6 +941,15 @@
 
                 if (data.choices && data.choices.length > 0) {
                     const reportContent = data.choices[0].message.content;
+
+                    // 保存用户数据和报告
+                    saveUserData(phone, {
+                        birthdate,
+                        birthtime,
+                        birthplace,
+                        report: reportContent
+                    });
+
                     showLifeReport(reportContent);
                     apiStatus.textContent = "API状态: 请求成功";
                 } else {
@@ -789,9 +960,42 @@
                 showError(`请求失败: ${error.message}`);
                 apiStatus.textContent = "API状态: 请求失败";
             } finally {
-                loader.style.display = 'none';
-                generateBtn.disabled = false;
+                // 重置UI
+                generateBtn.style.display = 'block';
+                progressContainer.style.display = 'none';
+                document.getElementById('progress-bar').style.width = '0';
             }
+        }
+
+        // 保存用户数据到localStorage
+        function saveUserData(phone, data) {
+            const userData = {
+                ...data,
+                timestamp: new Date().toISOString()
+            };
+            localStorage.setItem(`user_${phone}`, JSON.stringify(userData));
+        }
+
+        // 从localStorage获取用户数据
+        function getUserData(phone) {
+            const data = localStorage.getItem(`user_${phone}`);
+            return data ? JSON.parse(data) : null;
+        }
+
+        // 填充表单数据
+        function fillFormData(data) {
+            document.getElementById('birthdate').value = data.birthdate;
+            document.getElementById('birthtime').value = data.birthtime;
+            document.getElementById('birthplace').value = data.birthplace;
+
+            // 显示用户通知
+            const notice = document.getElementById('user-notice');
+            notice.style.display = 'block';
+
+            // 3秒后自动隐藏通知
+            setTimeout(() => {
+                notice.style.display = 'none';
+            }, 3000);
         }
 
         // 显示错误信息
@@ -833,22 +1037,72 @@
 
         // 初始化PWA安装按钮
         let deferredPrompt;
+        let isInstalled = false;
+
+        // 检查是否已安装应用
+        function checkIfInstalled() {
+            if (window.matchMedia('(display-mode: standalone)').matches) {
+                console.log('已安装为PWA');
+                isInstalled = true;
+                document.getElementById('install-btn').style.display = 'none';
+            }
+        }
 
         window.addEventListener('beforeinstallprompt', (e) => {
+            console.log('beforeinstallprompt event fired');
             e.preventDefault();
             deferredPrompt = e;
             document.getElementById('install-btn').style.display = 'flex';
         });
 
+        // 显示安装指南
+        function showInstallGuide() {
+            document.getElementById('install-guide').style.display = 'block';
+        }
+
         document.getElementById('install-btn').addEventListener('click', async () => {
-            if (deferredPrompt) {
-                deferredPrompt.prompt();
-                const { outcome } = await deferredPrompt.userChoice;
-                if (outcome === 'accepted') {
-                    console.log('用户接受了PWA安装');
-                }
-                deferredPrompt = null;
+            if (isInstalled) {
+                showError("应用已安装");
+                return;
             }
+
+            if (deferredPrompt) {
+                try {
+                    console.log('Prompting installation');
+                    deferredPrompt.prompt();
+                    const { outcome } = await deferredPrompt.userChoice;
+                    console.log(`User choice: ${outcome}`);
+                    if (outcome === 'accepted') {
+                        console.log('用户接受了PWA安装');
+                        document.getElementById('install-btn').style.display = 'none';
+                    }
+                    deferredPrompt = null;
+                } catch (error) {
+                    console.error('安装提示失败:', error);
+                    showInstallGuide();
+                }
+            } else {
+                console.log('deferredPrompt is null, showing guide');
+                showInstallGuide();
+            }
+        });
+
+        // 关闭安装指南
+        document.getElementById('close-guide').addEventListener('click', () => {
+            document.getElementById('install-guide').style.display = 'none';
+        });
+
+        // 浏览器特定安装指南
+        document.getElementById('chrome-install').addEventListener('click', () => {
+            alert('在Chrome浏览器中：\n1. 点击右上角三个点\n2. 选择"安装应用"或"添加到主屏幕"\n3. 确认安装');
+        });
+
+        document.getElementById('safari-install').addEventListener('click', () => {
+            alert('在Safari浏览器中：\n1. 点击分享按钮\n2. 选择"添加到主屏幕"\n3. 点击"添加"');
+        });
+
+        document.getElementById('huawei-install').addEventListener('click', () => {
+            alert('在华为浏览器中：\n1. 点击右下角菜单\n2. 选择"工具箱"\n3. 选择"添加至桌面"');
         });
 
         // 关闭弹窗
@@ -872,6 +1126,7 @@
         document.addEventListener('DOMContentLoaded', () => {
             createParticles();
             renderMatches();
+            checkIfInstalled();
 
             // 设置默认出生日期为25年前
             const defaultDate = new Date();
@@ -888,20 +1143,31 @@
                     document.getElementById('error-message').style.display = 'none';
                 });
             });
-        });
 
-        // 注册Service Worker
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('service-worker.js')
-                    .then(registration => {
-                        console.log('ServiceWorker 注册成功: ', registration.scope);
-                    })
-                    .catch(error => {
-                        console.log('ServiceWorker 注册失败: ', error);
-                    });
+            // 电话号码输入框监听
+            document.getElementById('phone').addEventListener('blur', function() {
+                const phone = this.value;
+                if (phone) {
+                    const userData = getUserData(phone);
+                    if (userData) {
+                        fillFormData(userData);
+                    }
+                }
             });
-        }
+
+            // 注册Service Worker
+            if ('serviceWorker' in navigator) {
+                window.addEventListener('load', () => {
+                    navigator.serviceWorker.register('service-worker.js')
+                        .then(registration => {
+                            console.log('ServiceWorker 注册成功: ', registration.scope);
+                        })
+                        .catch(error => {
+                            console.log('ServiceWorker 注册失败: ', error);
+                        });
+                });
+            }
+        });
     </script>
 </body>
 </html>
