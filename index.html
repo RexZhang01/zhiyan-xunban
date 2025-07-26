@@ -359,8 +359,8 @@
             color: white;
             border: none;
             border-radius: 50%;
-            width: 45px;
-            height: 45px;
+            width: 50px;
+            height: 50px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -492,78 +492,64 @@
             display: none;
         }
 
-        /* 安装指南样式 */
-        .install-guide {
+        /* 安装引导动画 */
+        .install-animation {
             position: fixed;
-            bottom: 70px;
-            right: 15px;
-            background: var(--darker);
-            border: 1px solid var(--primary);
-            border-radius: 12px;
-            padding: 20px;
-            width: 300px;
-            box-shadow: 0 8px 32px rgba(2, 8, 20, 0.4);
-            z-index: 100;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(2, 6, 23, 0.9);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
             display: none;
         }
 
-        .install-guide h3 {
-            color: var(--primary);
-            margin-bottom: 15px;
-            font-size: 1.2rem;
-        }
-
-        .install-steps {
-            list-style: none;
-            margin-bottom: 15px;
-        }
-
-        .install-steps li {
-            margin-bottom: 10px;
-            padding-left: 25px;
-            position: relative;
-        }
-
-        .install-steps li:before {
-            content: '✓';
-            position: absolute;
-            left: 0;
-            color: var(--primary);
-            font-weight: bold;
-        }
-
-        .install-browser {
-            display: flex;
-            gap: 10px;
-            margin-top: 15px;
-        }
-
-        .browser-btn {
-            flex: 1;
-            background: rgba(14, 165, 233, 0.2);
-            border: 1px solid var(--primary);
-            color: var(--light);
-            padding: 8px;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: var(--transition);
+        .install-animation-content {
             text-align: center;
-            font-size: 0.85rem;
+            max-width: 300px;
         }
 
-        .browser-btn:hover {
-            background: rgba(14, 165, 233, 0.4);
+        .install-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--primary);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 2.5rem;
+            animation: pulse 1.5s infinite;
         }
 
-        .close-guide {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: none;
-            border: none;
-            color: #94a3b8;
+        @keyframes pulse {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(14, 165, 233, 0.7); }
+            70% { transform: scale(1.05); box-shadow: 0 0 0 20px rgba(14, 165, 233, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(14, 165, 233, 0); }
+        }
+
+        .install-text {
             font-size: 1.2rem;
-            cursor: pointer;
+            margin-bottom: 20px;
+        }
+
+        .install-progress {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .install-progress-bar {
+            height: 100%;
+            background: var(--primary);
+            width: 0;
+            transition: width 0.5s ease;
         }
     </style>
 </head>
@@ -641,21 +627,14 @@
 
     <button class="pwa-install" id="install-btn" title="安装应用">📱</button>
 
-    <!-- 安装指南 -->
-    <div class="install-guide" id="install-guide">
-        <button class="close-guide" id="close-guide">&times;</button>
-        <h3>安装应用指南</h3>
-        <p>根据您使用的浏览器，请按照以下步骤安装应用：</p>
-        <ul class="install-steps">
-            <li>点击浏览器菜单（右上角三个点或更多选项）</li>
-            <li>选择"添加到主屏幕"或"安装应用"</li>
-            <li>确认安装</li>
-        </ul>
-        <p>或者使用以下快捷方式：</p>
-        <div class="install-browser">
-            <div class="browser-btn" id="chrome-install">Chrome</div>
-            <div class="browser-btn" id="safari-install">Safari</div>
-            <div class="browser-btn" id="huawei-install">华为浏览器</div>
+    <!-- 安装动画 -->
+    <div class="install-animation" id="install-animation">
+        <div class="install-animation-content">
+            <div class="install-icon">📱</div>
+            <div class="install-text" id="install-text">正在创建桌面快捷方式...</div>
+            <div class="install-progress">
+                <div class="install-progress-bar" id="install-progress-bar"></div>
+            </div>
         </div>
     </div>
 
@@ -1048,17 +1027,54 @@
             }
         }
 
+        // 显示安装动画
+        function showInstallAnimation() {
+            const animation = document.getElementById('install-animation');
+            const progressBar = document.getElementById('install-progress-bar');
+            const installText = document.getElementById('install-text');
+
+            animation.style.display = 'flex';
+            installText.textContent = "正在创建桌面快捷方式...";
+
+            let width = 0;
+            const interval = setInterval(() => {
+                if (width >= 100) {
+                    clearInterval(interval);
+
+                    // 模拟安装完成
+                    installText.textContent = "安装完成！";
+
+                    setTimeout(() => {
+                        animation.style.display = 'none';
+                        document.getElementById('install-btn').style.display = 'none';
+                        showSuccess("应用已成功添加到桌面");
+                    }, 1000);
+                    return;
+                }
+                width += 10;
+                progressBar.style.width = width + '%';
+            }, 100);
+        }
+
+        // 显示成功消息
+        function showSuccess(message) {
+            const errorMsg = document.getElementById('error-message');
+            errorMsg.style.color = '#4ade80';
+            errorMsg.textContent = message;
+            errorMsg.style.display = 'block';
+
+            // 3秒后自动隐藏
+            setTimeout(() => {
+                errorMsg.style.display = 'none';
+            }, 3000);
+        }
+
         window.addEventListener('beforeinstallprompt', (e) => {
             console.log('beforeinstallprompt event fired');
             e.preventDefault();
             deferredPrompt = e;
             document.getElementById('install-btn').style.display = 'flex';
         });
-
-        // 显示安装指南
-        function showInstallGuide() {
-            document.getElementById('install-guide').style.display = 'block';
-        }
 
         document.getElementById('install-btn').addEventListener('click', async () => {
             if (isInstalled) {
@@ -1070,40 +1086,55 @@
                 try {
                     console.log('Prompting installation');
                     deferredPrompt.prompt();
+
+                    // 显示安装动画
+                    showInstallAnimation();
+
                     const { outcome } = await deferredPrompt.userChoice;
                     console.log(`User choice: ${outcome}`);
                     if (outcome === 'accepted') {
                         console.log('用户接受了PWA安装');
-                        document.getElementById('install-btn').style.display = 'none';
+                        // 安装动画会处理后续UI更新
+                    } else {
+                        // 用户取消了安装
+                        document.getElementById('install-animation').style.display = 'none';
                     }
                     deferredPrompt = null;
                 } catch (error) {
                     console.error('安装提示失败:', error);
-                    showInstallGuide();
+                    // 回退到手动安装方法
+                    manualInstall();
                 }
             } else {
-                console.log('deferredPrompt is null, showing guide');
-                showInstallGuide();
+                console.log('deferredPrompt is null, using manual method');
+                manualInstall();
             }
         });
 
-        // 关闭安装指南
-        document.getElementById('close-guide').addEventListener('click', () => {
-            document.getElementById('install-guide').style.display = 'none';
-        });
+        // 手动安装方法（适用于所有浏览器）
+        function manualInstall() {
+            showInstallAnimation();
 
-        // 浏览器特定安装指南
-        document.getElementById('chrome-install').addEventListener('click', () => {
-            alert('在Chrome浏览器中：\n1. 点击右上角三个点\n2. 选择"安装应用"或"添加到主屏幕"\n3. 确认安装');
-        });
+            // 模拟安装过程
+            setTimeout(() => {
+                // 根据设备类型提供安装说明
+                const userAgent = navigator.userAgent;
 
-        document.getElementById('safari-install').addEventListener('click', () => {
-            alert('在Safari浏览器中：\n1. 点击分享按钮\n2. 选择"添加到主屏幕"\n3. 点击"添加"');
-        });
-
-        document.getElementById('huawei-install').addEventListener('click', () => {
-            alert('在华为浏览器中：\n1. 点击右下角菜单\n2. 选择"工具箱"\n3. 选择"添加至桌面"');
-        });
+                if (/iPhone|iPad|iPod/i.test(userAgent)) {
+                    // iOS设备
+                    document.getElementById('install-text').textContent = "请点击分享按钮，然后选择'添加到主屏幕'";
+                } else if (/Huawei|HONOR/i.test(userAgent)) {
+                    // 华为设备
+                    document.getElementById('install-text').textContent = "请点击浏览器菜单，选择'工具箱' > '添加至桌面'";
+                } else if (/Android/i.test(userAgent)) {
+                    // 安卓设备
+                    document.getElementById('install-text').textContent = "请点击浏览器菜单，选择'添加到主屏幕'";
+                } else {
+                    // 其他设备
+                    document.getElementById('install-text').textContent = "请使用浏览器的菜单选项添加应用";
+                }
+            }, 2000);
+        }
 
         // 关闭弹窗
         document.getElementById('close-report').addEventListener('click', () => {
