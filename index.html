@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0f172a">
+    <meta name="description" content="智焰·寻伴 - 探索人生密码，寻找心灵伴侣">
+    <title>智焰·寻伴</title>
+    <link rel="manifest" href="manifest.json">
+    <style>
+        :root {
+            --primary: #0ea5e9;
+            --primary-dark: #0284c7;
+            --secondary: #a855f7;
+            --dark: #0f172a;
+            --darker: #020617;
+            --light: #e2e8f0;
+            --card-bg: rgba(15, 23, 42, 0.8);
+            --glow: 0 0 10px rgba(14, 165, 233, 0.7), 0 0 20px rgba(14, 165, 233, 0.5);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--darker), var(--dark));
+            color: var(--light);
+            min-height: 100vh;
+            padding: 20px;
+            background-image:
+                radial-gradient(circle at 10% 20%, rgba(14, 165, 233, 0.1) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(168, 85, 247, 0.1) 0%, transparent 20%);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 20px 0;
+            position: relative;
+        }
+
+        header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--primary), transparent);
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: var(--glow);
+            letter-spacing: 2px;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #94a3b8;
+            font-weight: 300;
+            margin-top: 10px;
+        }
+
+        .content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        @media (max-width: 768px) {
+            .content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 32px rgba(2, 8, 20, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            transition: var(--transition);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(14, 165, 233, 0.3);
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-title i {
+            color: var(--secondary);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #94a3b8;
+            font-size: 0.9rem;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px 15px;
+            background: rgba(15, 23, 42, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: var(--light);
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.3);
+        }
+
+        .btn {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            padding: 14px 20px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: var(--transition);
+            margin-top: 10px;
+            letter-spacing: 1px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--glow);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .matches-list {
+            list-style: none;
+            max-height: 400px;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+
+        .matches-list::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .matches-list::-webkit-scrollbar-track {
+            background: rgba(15, 23, 42, 0.3);
+            border-radius: 10px;
+        }
+
+        .matches-list::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 10px;
+        }
+
+        .match-item {
+            background: rgba(15, 23, 42, 0.5);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: var(--transition);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .match-item:hover {
+            background: rgba(14, 165, 233, 0.1);
+            border-color: rgba(14, 165, 233, 0.3);
+        }
+
+        .match-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-right: 15px;
+        }
+
+        .match-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .match-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            font-size: 0.9rem;
+            color: #94a3b8;
+        }
+
+        .detail-item span {
+            color: var(--light);
+            margin-left: 5px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(2, 6, 23, 0.9);
+            z-index: 1000;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background: var(--darker);
+            max-width: 800px;
+            margin: 40px auto;
+            border-radius: 15px;
+            border: 1px solid rgba(14, 165, 233, 0.3);
+            box-shadow: var(--glow);
+            overflow: hidden;
+        }
+
+        .modal-header {
+            padding: 20px;
+            background: rgba(14, 165, 233, 0.1);
+            border-bottom: 1px solid rgba(14, 165, 233, 0.3);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 1.8rem;
+            color: var(--primary);
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: var(--light);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .close-btn:hover {
+            color: var(--primary);
+        }
+
+        .modal-body {
+            padding: 25px;
+            line-height: 1.8;
+        }
+
+        .report-section {
+            margin-bottom: 25px;
+        }
+
+        .report-section h3 {
+            color: var(--primary);
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(14, 165, 233, 0.2);
+        }
+
+        .compatibility-meter {
+            height: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            margin: 15px 0;
+            overflow: hidden;
+        }
+
+        .compatibility-level {
+            height: 100%;
+            background: linear-gradient(90deg, var(--secondary), var(--primary));
+            border-radius: 5px;
+            width: 85%;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+
+        .pwa-install {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(14, 165, 233, 0.4);
+            z-index: 100;
+            transition: var(--transition);
+        }
+
+        .pwa-install:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 16px rgba(14, 165, 233, 0.6);
+        }
+
+        /* 加载动画 */
+        .loader {
+            display: none;
+            width: 50px;
+            height: 50px;
+            margin: 20px auto;
+            border: 5px solid rgba(14, 165, 233, 0.3);
+            border-top: 5px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* 添加科技感元素 */
+        .tech-grid {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                linear-gradient(rgba(14, 165, 233, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(14, 165, 233, 0.05) 1px, transparent 1px);
+            background-size: 30px 30px;
+            z-index: -1;
+            opacity: 0.3;
+        }
+
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: var(--primary);
+            border-radius: 50%;
+            animation: float 15s infinite linear;
+            opacity: 0.7;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0) translateX(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.7;
+            }
+            90% {
+                opacity: 0.7;
+            }
+            100% {
+                transform: translateY(-100vh) translateX(100px);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="tech-grid"></div>
+    <div class="particles" id="particles"></div>
+
+    <div class="container">
+        <header>
+            <h1>智焰 · 寻伴</h1>
+            <p class="subtitle">星海茫茫，爱在何方，心安何处</p>
+        </header>
+
+        <div class="content">
+            <!-- 左侧卡片 - 个人信息输入 -->
+            <div class="card">
+                <h2 class="card-title"><i>🔮</i> 我的命理探索</h2>
+                <div class="form-group">
+                    <label for="phone">我的ID（电话号码）</label>
+                    <input type="tel" id="phone" placeholder="请输入您的电话号码">
+                </div>
+
+                <div class="form-group">
+                    <label for="birthdate">出生日期</label>
+                    <input type="date" id="birthdate">
+                </div>
+
+                <div class="form-group">
+                    <label for="birthtime">出生时间</label>
+                    <select id="birthtime">
+                        <option value="">请选择出生时间</option>
+                        <option value="00:00">子时 (23:00-01:00)</option>
+                        <option value="01:00">丑时 (01:00-03:00)</option>
+                        <option value="03:00">寅时 (03:00-05:00)</option>
+                        <option value="05:00">卯时 (05:00-07:00)</option>
+                        <option value="07:00">辰时 (07:00-09:00)</option>
+                        <option value="09:00">巳时 (09:00-11:00)</option>
+                        <option value="11:00">午时 (11:00-13:00)</option>
+                        <option value="13:00">未时 (13:00-15:00)</option>
+                        <option value="15:00">申时 (15:00-17:00)</option>
+                        <option value="17:00">酉时 (17:00-19:00)</option>
+                        <option value="19:00">戌时 (19:00-21:00)</option>
+                        <option value="21:00">亥时 (21:00-23:00)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="birthplace">出生地点</label>
+                    <input type="text" id="birthplace" placeholder="例如：北京市朝阳区">
+                </div>
+
+                <button id="generate-btn" class="btn">查看我的人生密码</button>
+                <div class="loader" id="loader"></div>
+            </div>
+
+            <!-- 右侧卡片 - 潜在匹配对象 -->
+            <div class="card">
+                <h2 class="card-title"><i>💞</i> 潜在匹配对象</h2>
+                <ul class="matches-list" id="matches-list">
+                    <!-- 匹配对象将通过JS动态生成 -->
+                </ul>
+            </div>
+        </div>
+
+        <footer>
+            <p>智焰 · 寻伴 © 2023 | 探索人生密码，寻找心灵伴侣</p>
+        </footer>
+    </div>
+
+    <button class="pwa-install" id="install-btn" title="安装应用">📱</button>
+
+    <!-- 人生密码报告弹窗 -->
+    <div id="report-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">您的人生密码解析报告</h2>
+                <button class="close-btn" id="close-report">&times;</button>
+            </div>
+            <div class="modal-body" id="report-content">
+                <!-- 报告内容将通过JS动态生成 -->
+            </div>
+        </div>
+    </div>
+
+    <!-- 匹配对象详情弹窗 -->
+    <div id="match-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">匹配对象详情</h2>
+                <button class="close-btn" id="close-match">&times;</button>
+            </div>
+            <div class="modal-body" id="match-details">
+                <!-- 匹配对象详情将通过JS动态生成 -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 创建粒子效果
+        function createParticles() {
+            const container = document.getElementById('particles');
+            const particleCount = 50;
+
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+
+                // 随机位置
+                const posX = Math.random() * 100;
+                const posY = Math.random() * 100;
+                particle.style.left = `${posX}%`;
+                particle.style.top = `${posY}%`;
+
+                // 随机大小
+                const size = Math.random() * 3 + 1;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+
+                // 随机动画延迟
+                const delay = Math.random() * 15;
+                particle.style.animationDelay = `${delay}s`;
+
+                container.appendChild(particle);
+            }
+        }
+
+        // 生成匹配对象数据
+        function generateMatches() {
+            const matches = [
+                {
+                    id: 1,
+                    name: "林星辰",
+                    age: 28,
+                    gender: "女",
+                    location: "上海市",
+                    compatibility: 92,
+                    bazi: "丙子 戊戌 甲寅 丁卯",
+                    description: "温柔知性，热爱艺术与旅行，从事教育工作，寻求心灵契合的伴侣。"
+                },
+                {
+                    id: 2,
+                    name: "陈墨阳",
+                    age: 32,
+                    gender: "男",
+                    location: "杭州市",
+                    compatibility: 87,
+                    bazi: "乙亥 丁酉 壬午 辛丑",
+                    description: "科技公司创始人，理性与感性兼备，喜欢阅读和户外运动，重视家庭价值。"
+                },
+                {
+                    id: 3,
+                    name: "苏雨薇",
+                    age: 26,
+                    gender: "女",
+                    location: "成都市",
+                    compatibility: 95,
+                    bazi: "戊寅 癸亥 乙巳 丙戌",
+                    description: "心理咨询师，善解人意，热爱生活，喜欢瑜伽和茶道，追求精神共鸣的关系。"
+                }
+            ];
+
+            return matches;
+        }
+
+        // 渲染匹配对象列表
+        function renderMatches() {
+            const matchesList = document.getElementById('matches-list');
+            const matches = generateMatches();
+
+            matchesList.innerHTML = '';
+
+            matches.forEach(match => {
+                const li = document.createElement('li');
+                li.classList.add('match-item');
+                li.dataset.id = match.id;
+
+                li.innerHTML = `
+                    <div class="match-header">
+                        <div class="avatar">${match.name.charAt(0)}</div>
+                        <div>
+                            <div class="match-name">${match.name} · ${match.age}岁</div>
+                            <div>${match.location} · ${match.gender === '男' ? '♂' : '♀'}</div>
+                        </div>
+                    </div>
+                    <div class="match-details">
+                        <div class="detail-item">八字: <span>${match.bazi}</span></div>
+                        <div class="detail-item">匹配度: <span>${match.compatibility}%</span></div>
+                    </div>
+                `;
+
+                li.addEventListener('click', () => showMatchDetails(match.id));
+                matchesList.appendChild(li);
+            });
+        }
+
+        // 显示匹配对象详情
+        function showMatchDetails(matchId) {
+            const matches = generateMatches();
+            const match = matches.find(m => m.id === matchId);
+
+            if (!match) return;
+
+            const matchDetails = document.getElementById('match-details');
+            matchDetails.innerHTML = `
+                <div style="display: flex; align-items: center; margin-bottom: 20px;">
+                    <div class="avatar" style="width: 80px; height: 80px; font-size: 2rem;">${match.name.charAt(0)}</div>
+                    <div style="margin-left: 20px;">
+                        <h2 style="font-size: 1.8rem; margin-bottom: 5px;">${match.name}</h2>
+                        <p>${match.age}岁 · ${match.gender} · ${match.location}</p>
+                    </div>
+                </div>
+
+                <div class="report-section">
+                    <h3>八字命理</h3>
+                    <p>${match.bazi}</p>
+                </div>
+
+                <div class="report-section">
+                    <h3>与您的匹配度</h3>
+                    <div style="display: flex; align-items: center; gap: 15px;">
+                        <div style="font-size: 2rem; font-weight: bold; color: var(--primary);">${match.compatibility}%</div>
+                        <div style="flex-grow: 1;">
+                            <div class="compatibility-meter">
+                                <div class="compatibility-level" style="width: ${match.compatibility}%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="report-section">
+                    <h3>个人简介</h3>
+                    <p>${match.description}</p>
+                </div>
+
+                <div class="report-section">
+                    <h3>命理契合分析</h3>
+                    <p>您与${match.name}的八字组合呈现上吉之相。日主相生，五行互补，主婚姻和谐，事业互助。在情感方面，双方均有较强的精神共鸣需求，能够互相理解和支持。命宫相合，主长期关系稳定，有望建立深厚的伴侣关系。</p>
+                </div>
+
+                <button class="btn" style="margin-top: 20px;">发送联系请求</button>
+            `;
+
+            document.getElementById('match-modal').style.display = 'block';
+        }
+
+        // 生成命理报告
+        function generateLifeReport() {
+            const phone = document.getElementById('phone').value || '138****8888';
+            const birthdate = document.getElementById('birthdate').value || '1990-01-01';
+            const birthtime = document.getElementById('birthtime').value || '07:00';
+            const birthplace = document.getElementById('birthplace').value || '北京市';
+
+            const date = new Date(birthdate);
+            const year = date.getFullYear();
+            const month = date.getMonth() + 1;
+            const day = date.getDate();
+
+            // 这里应该是实际API调用
+            // 为简化演示，我们返回模拟数据
+            return {
+                bazi: `戊辰 丙戌 庚寅 辛卯`,
+                elements: {
+                    metal: 25,
+                    wood: 30,
+                    water: 15,
+                    fire: 20,
+                    earth: 10
+                },
+                analysis: `
+                    <div class="report-section">
+                        <h3>基本命理信息</h3>
+                        <p><strong>八字：</strong>戊辰 丙戌 庚寅 辛卯</p>
+                        <p><strong>命宫：</strong>卯宫</p>
+                        <p><strong>五行分布：</strong>金(25%) 木(30%) 水(15%) 火(20%) 土(10%)</p>
+                        <p><strong>命格：</strong>庚金生于戌月，得丙火炼金，辛金助身，为身强之命。</p>
+                    </div>
+
+                    <div class="report-section">
+                        <h3>性格特质分析</h3>
+                        <p>庚金日主，代表刚强、果断、坚韧的特质。您具有领导才能，行事果断，目标明确。丙火透出，赋予您热情和表现力，在社交场合中游刃有余。辛金劫财，显示您重情重义，但有时过于坚持己见。</p>
+                        <p>五行中木气旺盛，说明您具有创造力和适应能力，但需注意避免思虑过多导致决策犹豫。</p>
+                    </div>
+
+                    <div class="report-section">
+                        <h3>事业与财富</h3>
+                        <p>命局中财星有库，主一生财源稳定，尤其35岁后财运渐入佳境。丙火为官星，适合从事管理、技术或公职类工作。当前大运（2020-2029）为乙酉，金旺生水，利于专业技能提升和跨界发展。</p>
+                        <p>2025年流年乙巳，天干乙庚合，地支巳火助官，事业上有突破机会，宜把握农历三月、九月的关键时机。</p>
+                    </div>
+
+                    <div class="report-section">
+                        <h3>情感与婚姻</h3>
+                        <p>日支寅木为偏财，显示您对感情要求较高，重视精神共鸣。配偶宫坐寅木，未来伴侣性格开朗，有艺术气质，可能从事文化教育相关行业。</p>
+                        <p>当前大运酉金冲卯木，2024-2026年是婚恋关键期，尤其是2025年红鸾星动，有良缘出现之象。建议多参与文化交流活动，容易在艺术展览、读书会等场合遇到理想伴侣。</p>
+                    </div>
+
+                    <div class="report-section">
+                        <h3>健康建议</h3>
+                        <p>庚金旺需注意肺部健康，避免吸烟和空气污染环境。木气过旺易导致肝胆失调，建议定期体检，保持规律作息。火为调候用神，适量运动（尤其户外活动）有助于平衡能量。</p>
+                    </div>
+
+                    <div class="report-section">
+                        <h3>2025年流年运势</h3>
+                        <p>乙巳年，天干乙庚合，地支巳火官星，整体运势上扬：</p>
+                        <ul style="padding-left: 20px; margin-top: 10px;">
+                            <li><strong>事业：</strong>有贵人提携，可能获得重要项目机会，四月、十月是关键期</li>
+                            <li><strong>财运：</strong>正财稳定，偏财谨慎，九月有意外支出需留意</li>
+                            <li><strong>感情：</strong>单身者桃花旺盛，五月易遇良缘；有伴侣者需加强沟通</li>
+                            <li><strong>健康：</strong>注意呼吸道疾病，秋季加强防护</li>
+                        </ul>
+                    </div>
+                `
+            };
+        }
+
+        // 显示命理报告
+        function showLifeReport() {
+            const loader = document.getElementById('loader');
+            const reportContent = document.getElementById('report-content');
+
+            // 显示加载动画
+            loader.style.display = 'block';
+
+            // 模拟API请求延迟
+            setTimeout(() => {
+                const report = generateLifeReport();
+                reportContent.innerHTML = report.analysis;
+
+                loader.style.display = 'none';
+                document.getElementById('report-modal').style.display = 'block';
+            }, 1500);
+        }
+
+        // 初始化PWA安装按钮
+        let deferredPrompt;
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            document.getElementById('install-btn').style.display = 'flex';
+        });
+
+        document.getElementById('install-btn').addEventListener('click', async () => {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                if (outcome === 'accepted') {
+                    console.log('用户接受了PWA安装');
+                }
+                deferredPrompt = null;
+            }
+        });
+
+        // 关闭弹窗
+        document.getElementById('close-report').addEventListener('click', () => {
+            document.getElementById('report-modal').style.display = 'none';
+        });
+
+        document.getElementById('close-match').addEventListener('click', () => {
+            document.getElementById('match-modal').style.display = 'none';
+        });
+
+        // 点击弹窗外部关闭
+        window.addEventListener('click', (e) => {
+            if (e.target.classList.contains('modal')) {
+                document.getElementById('report-modal').style.display = 'none';
+                document.getElementById('match-modal').style.display = 'none';
+            }
+        });
+
+        // 初始化应用
+        document.addEventListener('DOMContentLoaded', () => {
+            createParticles();
+            renderMatches();
+
+            // 设置默认出生日期为25年前
+            const defaultDate = new Date();
+            defaultDate.setFullYear(defaultDate.getFullYear() - 25);
+            document.getElementById('birthdate').valueAsDate = defaultDate;
+
+            // 绑定按钮事件
+            document.getElementById('generate-btn').addEventListener('click', showLifeReport);
+        });
+
+        // 注册Service Worker
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('service-worker.js')
+                    .then(registration => {
+                        console.log('ServiceWorker 注册成功: ', registration.scope);
+                    })
+                    .catch(error => {
+                        console.log('ServiceWorker 注册失败: ', error);
+                    });
+            });
+        }
+    </script>
+</body>
+</html>
