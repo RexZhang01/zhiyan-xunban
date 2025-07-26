@@ -492,64 +492,14 @@
             display: none;
         }
 
-        /* 安装引导动画 */
-        .install-animation {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(2, 6, 23, 0.9);
-            z-index: 1000;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
+        .success-message {
+            color: #4ade80;
+            background: rgba(74, 222, 128, 0.1);
+            padding: 8px;
+            border-radius: 6px;
+            margin-top: 8px;
             display: none;
-        }
-
-        .install-animation-content {
-            text-align: center;
-            max-width: 300px;
-        }
-
-        .install-icon {
-            width: 80px;
-            height: 80px;
-            background: var(--primary);
-            border-radius: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 20px;
-            font-size: 2.5rem;
-            animation: pulse 1.5s infinite;
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(14, 165, 233, 0.7); }
-            70% { transform: scale(1.05); box-shadow: 0 0 0 20px rgba(14, 165, 233, 0); }
-            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(14, 165, 233, 0); }
-        }
-
-        .install-text {
-            font-size: 1.2rem;
-            margin-bottom: 20px;
-        }
-
-        .install-progress {
-            width: 100%;
-            height: 8px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 4px;
-            overflow: hidden;
-        }
-
-        .install-progress-bar {
-            height: 100%;
-            background: var(--primary);
-            width: 0;
-            transition: width 0.5s ease;
+            font-size: 0.9rem;
         }
     </style>
 </head>
@@ -608,6 +558,7 @@
                 </div>
                 <div class="loader" id="loader"></div>
                 <div class="error-message" id="error-message"></div>
+                <div class="success-message" id="success-message"></div>
                 <div class="api-status" id="api-status">API状态: 准备就绪</div>
             </div>
 
@@ -626,17 +577,6 @@
     </div>
 
     <button class="pwa-install" id="install-btn" title="安装应用">📱</button>
-
-    <!-- 安装动画 -->
-    <div class="install-animation" id="install-animation">
-        <div class="install-animation-content">
-            <div class="install-icon">📱</div>
-            <div class="install-text" id="install-text">正在创建桌面快捷方式...</div>
-            <div class="install-progress">
-                <div class="install-progress-bar" id="install-progress-bar"></div>
-            </div>
-        </div>
-    </div>
 
     <!-- 人生密码报告弹窗 -->
     <div id="report-modal" class="modal">
@@ -989,6 +929,18 @@
             }, 3000);
         }
 
+        // 显示成功信息
+        function showSuccess(message) {
+            const successMsg = document.getElementById('success-message');
+            successMsg.textContent = message;
+            successMsg.style.display = 'block';
+
+            // 3秒后自动隐藏
+            setTimeout(() => {
+                successMsg.style.display = 'none';
+            }, 3000);
+        }
+
         // 显示命理报告
         function showLifeReport(reportContent) {
             const reportDiv = document.getElementById('report-content');
@@ -1020,53 +972,37 @@
 
         // 检查是否已安装应用
         function checkIfInstalled() {
+            // 方法1: 检查display-mode
             if (window.matchMedia('(display-mode: standalone)').matches) {
-                console.log('已安装为PWA');
+                console.log('已安装为PWA (display-mode)');
                 isInstalled = true;
                 document.getElementById('install-btn').style.display = 'none';
+                return;
             }
-        }
 
-        // 显示安装动画
-        function showInstallAnimation() {
-            const animation = document.getElementById('install-animation');
-            const progressBar = document.getElementById('install-progress-bar');
-            const installText = document.getElementById('install-text');
+            // 方法2: 检查navigator.standalone (iOS)
+            if (window.navigator.standalone) {
+                console.log('已安装为PWA (iOS standalone)');
+                isInstalled = true;
+                document.getElementById('install-btn').style.display = 'none';
+                return;
+            }
 
-            animation.style.display = 'flex';
-            installText.textContent = "正在创建桌面快捷方式...";
-
-            let width = 0;
-            const interval = setInterval(() => {
-                if (width >= 100) {
-                    clearInterval(interval);
-
-                    // 模拟安装完成
-                    installText.textContent = "安装完成！";
-
-                    setTimeout(() => {
-                        animation.style.display = 'none';
+            // 方法3: 检查启动方式
+            if (window.performance) {
+                const navEntries = window.performance.getEntriesByType('navigation');
+                if (navEntries.length > 0 && navEntries[0].type === 'back_forward') {
+                    console.log('从历史记录加载，不隐藏安装按钮');
+                } else {
+                    // 检查是否从主屏幕启动
+                    const startUrl = window.location.href;
+                    if (startUrl.includes('start_url') || localStorage.getItem('pwa_launched')) {
+                        console.log('从主屏幕启动');
+                        isInstalled = true;
                         document.getElementById('install-btn').style.display = 'none';
-                        showSuccess("应用已成功添加到桌面");
-                    }, 1000);
-                    return;
+                    }
                 }
-                width += 10;
-                progressBar.style.width = width + '%';
-            }, 100);
-        }
-
-        // 显示成功消息
-        function showSuccess(message) {
-            const errorMsg = document.getElementById('error-message');
-            errorMsg.style.color = '#4ade80';
-            errorMsg.textContent = message;
-            errorMsg.style.display = 'block';
-
-            // 3秒后自动隐藏
-            setTimeout(() => {
-                errorMsg.style.display = 'none';
-            }, 3000);
+            }
         }
 
         window.addEventListener('beforeinstallprompt', (e) => {
@@ -1076,65 +1012,72 @@
             document.getElementById('install-btn').style.display = 'flex';
         });
 
-        document.getElementById('install-btn').addEventListener('click', async () => {
+        // 处理安装事件
+        function handleInstall() {
             if (isInstalled) {
                 showError("应用已安装");
                 return;
             }
 
             if (deferredPrompt) {
-                try {
-                    console.log('Prompting installation');
-                    deferredPrompt.prompt();
+                // 标准安装流程
+                deferredPrompt.prompt();
 
-                    // 显示安装动画
-                    showInstallAnimation();
-
-                    const { outcome } = await deferredPrompt.userChoice;
-                    console.log(`User choice: ${outcome}`);
-                    if (outcome === 'accepted') {
+                // 监听用户选择
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
                         console.log('用户接受了PWA安装');
-                        // 安装动画会处理后续UI更新
+                        showSuccess("应用已成功添加到桌面！");
+                        document.getElementById('install-btn').style.display = 'none';
+                        isInstalled = true;
+
+                        // 标记为已安装
+                        localStorage.setItem('pwa_installed', 'true');
                     } else {
-                        // 用户取消了安装
-                        document.getElementById('install-animation').style.display = 'none';
+                        console.log('用户拒绝了PWA安装');
+                        showError("安装已取消");
                     }
                     deferredPrompt = null;
-                } catch (error) {
-                    console.error('安装提示失败:', error);
-                    // 回退到手动安装方法
-                    manualInstall();
-                }
+                });
             } else {
-                console.log('deferredPrompt is null, using manual method');
+                // 回退到手动安装方法
                 manualInstall();
             }
-        });
+        }
 
         // 手动安装方法（适用于所有浏览器）
         function manualInstall() {
-            showInstallAnimation();
+            const userAgent = navigator.userAgent;
 
-            // 模拟安装过程
-            setTimeout(() => {
-                // 根据设备类型提供安装说明
-                const userAgent = navigator.userAgent;
+            // 创建安装指南
+            let message = "请按照以下步骤安装应用：\n";
 
-                if (/iPhone|iPad|iPod/i.test(userAgent)) {
-                    // iOS设备
-                    document.getElementById('install-text').textContent = "请点击分享按钮，然后选择'添加到主屏幕'";
-                } else if (/Huawei|HONOR/i.test(userAgent)) {
-                    // 华为设备
-                    document.getElementById('install-text').textContent = "请点击浏览器菜单，选择'工具箱' > '添加至桌面'";
-                } else if (/Android/i.test(userAgent)) {
-                    // 安卓设备
-                    document.getElementById('install-text').textContent = "请点击浏览器菜单，选择'添加到主屏幕'";
-                } else {
-                    // 其他设备
-                    document.getElementById('install-text').textContent = "请使用浏览器的菜单选项添加应用";
-                }
-            }, 2000);
+            if (/iPhone|iPad|iPod/i.test(userAgent)) {
+                // iOS设备
+                message += "1. 点击分享按钮（Safari浏览器底部中间图标）\n";
+                message += "2. 选择'添加到主屏幕'\n";
+                message += "3. 点击'添加'按钮";
+            } else if (/Huawei|HONOR/i.test(userAgent)) {
+                // 华为设备
+                message += "1. 点击浏览器菜单（右下角三个点）\n";
+                message += "2. 选择'工具箱'\n";
+                message += "3. 选择'添加至桌面'";
+            } else if (/Android/i.test(userAgent)) {
+                // 安卓设备
+                message += "1. 点击浏览器菜单（右上角三个点）\n";
+                message += "2. 选择'添加到主屏幕'\n";
+                message += "3. 点击'添加'按钮";
+            } else {
+                // 桌面设备
+                message += "1. 点击浏览器菜单（右上角三个点）\n";
+                message += "2. 选择'更多工具' > '创建快捷方式'\n";
+                message += "3. 勾选'在窗口中打开'并点击'创建'";
+            }
+
+            alert(message);
         }
+
+        document.getElementById('install-btn').addEventListener('click', handleInstall);
 
         // 关闭弹窗
         document.getElementById('close-report').addEventListener('click', () => {
@@ -1186,17 +1129,25 @@
                 }
             });
 
-            // 注册Service Worker
+            // 注册Service Worker - 解决桌面端404错误
             if ('serviceWorker' in navigator) {
                 window.addEventListener('load', () => {
-                    navigator.serviceWorker.register('service-worker.js')
+                    navigator.serviceWorker.register('service-worker.js', { scope: './' })
                         .then(registration => {
                             console.log('ServiceWorker 注册成功: ', registration.scope);
+
+                            // 确保缓存所有必要资源
+                            registration.update();
                         })
                         .catch(error => {
                             console.log('ServiceWorker 注册失败: ', error);
                         });
                 });
+            }
+
+            // 标记为PWA启动
+            if (window.matchMedia('(display-mode: standalone)').matches) {
+                localStorage.setItem('pwa_launched', 'true');
             }
         });
     </script>

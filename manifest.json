@@ -2,7 +2,8 @@
   "name": "智焰·寻伴",
   "short_name": "智焰寻伴",
   "description": "探索人生密码，寻找心灵伴侣",
-  "start_url": "/",
+  "start_url": "./index.html",
+  "scope": "./",
   "display": "standalone",
   "background_color": "#0f172a",
   "theme_color": "#0ea5e9",
@@ -16,6 +17,13 @@
       "src": "icon-512.png",
       "type": "image/png",
       "sizes": "512x512"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "screenshot1.png",
+      "sizes": "1280x720",
+      "type": "image/png"
     }
   ]
 }
