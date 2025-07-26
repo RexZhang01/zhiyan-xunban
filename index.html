@@ -174,6 +174,12 @@
             transform: translateY(0);
         }
 
+        .btn:disabled {
+            background: #64748b;
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
         .matches-list {
             list-style: none;
             max-height: 400px;
@@ -429,6 +435,22 @@
                 opacity: 0;
             }
         }
+
+        .api-status {
+            text-align: center;
+            margin-top: 10px;
+            font-size: 0.9rem;
+            color: #94a3b8;
+        }
+
+        .error-message {
+            color: #f87171;
+            background: rgba(248, 113, 113, 0.1);
+            padding: 10px;
+            border-radius: 8px;
+            margin-top: 10px;
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -447,17 +469,17 @@
                 <h2 class="card-title"><i>🔮</i> 我的命理探索</h2>
                 <div class="form-group">
                     <label for="phone">我的ID（电话号码）</label>
-                    <input type="tel" id="phone" placeholder="请输入您的电话号码">
+                    <input type="tel" id="phone" placeholder="请输入您的电话号码" required>
                 </div>
 
                 <div class="form-group">
                     <label for="birthdate">出生日期</label>
-                    <input type="date" id="birthdate">
+                    <input type="date" id="birthdate" required>
                 </div>
 
                 <div class="form-group">
                     <label for="birthtime">出生时间</label>
-                    <select id="birthtime">
+                    <select id="birthtime" required>
                         <option value="">请选择出生时间</option>
                         <option value="00:00">子时 (23:00-01:00)</option>
                         <option value="01:00">丑时 (01:00-03:00)</option>
@@ -476,11 +498,13 @@
 
                 <div class="form-group">
                     <label for="birthplace">出生地点</label>
-                    <input type="text" id="birthplace" placeholder="例如：北京市朝阳区">
+                    <input type="text" id="birthplace" placeholder="例如：北京市朝阳区" required>
                 </div>
 
                 <button id="generate-btn" class="btn">查看我的人生密码</button>
                 <div class="loader" id="loader"></div>
+                <div class="error-message" id="error-message"></div>
+                <div class="api-status" id="api-status">API状态: 准备就绪</div>
             </div>
 
             <!-- 右侧卡片 - 潜在匹配对象 -->
@@ -526,6 +550,10 @@
     </div>
 
     <script>
+        // DeepSeek API配置
+        const DEEPSEEK_API_KEY = "sk-81817dfcc41e4197b9dd255f69200f99";
+        const DEEPSEEK_API_URL = "https://api.deepseek.com/v1/chat/completions";
+
         // 创建粒子效果
         function createParticles() {
             const container = document.getElementById('particles');
@@ -673,91 +701,134 @@
             document.getElementById('match-modal').style.display = 'block';
         }
 
-        // 生成命理报告
-        function generateLifeReport() {
-            const phone = document.getElementById('phone').value || '138****8888';
-            const birthdate = document.getElementById('birthdate').value || '1990-01-01';
-            const birthtime = document.getElementById('birthtime').value || '07:00';
-            const birthplace = document.getElementById('birthplace').value || '北京市';
+        // 调用DeepSeek API生成命理报告
+        async function generateLifeReport() {
+            // 获取表单数据
+            const phone = document.getElementById('phone').value;
+            const birthdate = document.getElementById('birthdate').value;
+            const birthtime = document.getElementById('birthtime').value;
+            const birthplace = document.getElementById('birthplace').value;
 
-            const date = new Date(birthdate);
-            const year = date.getFullYear();
-            const month = date.getMonth() + 1;
-            const day = date.getDate();
+            // 验证输入
+            if (!phone || !birthdate || !birthtime || !birthplace) {
+                showError("请填写所有必填字段");
+                return;
+            }
 
-            // 这里应该是实际API调用
-            // 为简化演示，我们返回模拟数据
-            return {
-                bazi: `戊辰 丙戌 庚寅 辛卯`,
-                elements: {
-                    metal: 25,
-                    wood: 30,
-                    water: 15,
-                    fire: 20,
-                    earth: 10
-                },
-                analysis: `
-                    <div class="report-section">
-                        <h3>基本命理信息</h3>
-                        <p><strong>八字：</strong>戊辰 丙戌 庚寅 辛卯</p>
-                        <p><strong>命宫：</strong>卯宫</p>
-                        <p><strong>五行分布：</strong>金(25%) 木(30%) 水(15%) 火(20%) 土(10%)</p>
-                        <p><strong>命格：</strong>庚金生于戌月，得丙火炼金，辛金助身，为身强之命。</p>
-                    </div>
+            // 显示加载状态
+            const loader = document.getElementById('loader');
+            const generateBtn = document.getElementById('generate-btn');
+            const apiStatus = document.getElementById('api-status');
+            const errorMsg = document.getElementById('error-message');
 
-                    <div class="report-section">
-                        <h3>性格特质分析</h3>
-                        <p>庚金日主，代表刚强、果断、坚韧的特质。您具有领导才能，行事果断，目标明确。丙火透出，赋予您热情和表现力，在社交场合中游刃有余。辛金劫财，显示您重情重义，但有时过于坚持己见。</p>
-                        <p>五行中木气旺盛，说明您具有创造力和适应能力，但需注意避免思虑过多导致决策犹豫。</p>
-                    </div>
+            loader.style.display = 'block';
+            generateBtn.disabled = true;
+            apiStatus.textContent = "API状态: 请求中...";
+            errorMsg.style.display = 'none';
 
-                    <div class="report-section">
-                        <h3>事业与财富</h3>
-                        <p>命局中财星有库，主一生财源稳定，尤其35岁后财运渐入佳境。丙火为官星，适合从事管理、技术或公职类工作。当前大运（2020-2029）为乙酉，金旺生水，利于专业技能提升和跨界发展。</p>
-                        <p>2025年流年乙巳，天干乙庚合，地支巳火助官，事业上有突破机会，宜把握农历三月、九月的关键时机。</p>
-                    </div>
+            try {
+                // 构造用户输入信息
+                const userInfo = `用户信息：
+- 电话号码: ${phone}
+- 出生日期: ${birthdate}
+- 出生时间: ${birthtime}
+- 出生地点: ${birthplace}`;
 
-                    <div class="report-section">
-                        <h3>情感与婚姻</h3>
-                        <p>日支寅木为偏财，显示您对感情要求较高，重视精神共鸣。配偶宫坐寅木，未来伴侣性格开朗，有艺术气质，可能从事文化教育相关行业。</p>
-                        <p>当前大运酉金冲卯木，2024-2026年是婚恋关键期，尤其是2025年红鸾星动，有良缘出现之象。建议多参与文化交流活动，容易在艺术展览、读书会等场合遇到理想伴侣。</p>
-                    </div>
+                // 构造系统提示词
+                const systemPrompt = `你是一位资深命理大师，精通八字命理分析。请根据用户提供的出生信息，生成一份非常全面且详细的、专业的命理分析报告。报告应包含以下内容：
+1. 八字排盘（年柱、月柱、日柱、时柱）
+2. 五行分析（金木水火土分布）
+3. 性格特质分析
+4. 事业与财富分析
+5. 发生转折的关键节点（时间、事项）
+5. 情感与婚姻分析
+6. 健康建议
+7. 2025年流年运势预测
 
-                    <div class="report-section">
-                        <h3>健康建议</h3>
-                        <p>庚金旺需注意肺部健康，避免吸烟和空气污染环境。木气过旺易导致肝胆失调，建议定期体检，保持规律作息。火为调候用神，适量运动（尤其户外活动）有助于平衡能量。</p>
-                    </div>
+使用专业的命理术语，但也要让普通人能理解。分析要深入、全面，体现出专业水准。报告应分段清晰，使用标题组织内容。`;
 
-                    <div class="report-section">
-                        <h3>2025年流年运势</h3>
-                        <p>乙巳年，天干乙庚合，地支巳火官星，整体运势上扬：</p>
-                        <ul style="padding-left: 20px; margin-top: 10px;">
-                            <li><strong>事业：</strong>有贵人提携，可能获得重要项目机会，四月、十月是关键期</li>
-                            <li><strong>财运：</strong>正财稳定，偏财谨慎，九月有意外支出需留意</li>
-                            <li><strong>感情：</strong>单身者桃花旺盛，五月易遇良缘；有伴侣者需加强沟通</li>
-                            <li><strong>健康：</strong>注意呼吸道疾病，秋季加强防护</li>
-                        </ul>
-                    </div>
-                `
-            };
+                // 构造API请求
+                const response = await fetch(DEEPSEEK_API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${DEEPSEEK_API_KEY}`
+                    },
+                    body: JSON.stringify({
+                        model: "deepseek-chat",
+                        messages: [
+                            {
+                                "role": "system",
+                                "content": systemPrompt
+                            },
+                            {
+                                "role": "user",
+                                "content": userInfo
+                            }
+                        ],
+                        temperature: 0.7,
+                        max_tokens: 2000
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`API请求失败: ${response.status} ${response.statusText}`);
+                }
+
+                const data = await response.json();
+
+                if (data.choices && data.choices.length > 0) {
+                    const reportContent = data.choices[0].message.content;
+                    showLifeReport(reportContent);
+                    apiStatus.textContent = "API状态: 请求成功";
+                } else {
+                    throw new Error("未收到有效响应");
+                }
+            } catch (error) {
+                console.error('API请求失败:', error);
+                showError(`请求失败: ${error.message}`);
+                apiStatus.textContent = "API状态: 请求失败";
+            } finally {
+                loader.style.display = 'none';
+                generateBtn.disabled = false;
+            }
+        }
+
+        // 显示错误信息
+        function showError(message) {
+            const errorMsg = document.getElementById('error-message');
+            errorMsg.textContent = message;
+            errorMsg.style.display = 'block';
+
+            // 3秒后自动隐藏
+            setTimeout(() => {
+                errorMsg.style.display = 'none';
+            }, 3000);
         }
 
         // 显示命理报告
-        function showLifeReport() {
-            const loader = document.getElementById('loader');
-            const reportContent = document.getElementById('report-content');
+        function showLifeReport(reportContent) {
+            const reportDiv = document.getElementById('report-content');
 
-            // 显示加载动画
-            loader.style.display = 'block';
+            // 使用Markdown格式转换（简单实现）
+            const formattedContent = reportContent
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') // 加粗
+                .replace(/\n/g, '<br>') // 换行
+                .replace(/### (.*?)\n/g, '<h3>$1</h3>') // 三级标题
+                .replace(/## (.*?)\n/g, '<h2 style="color: var(--primary); margin-top: 20px;">$1</h2>') // 二级标题
+                .replace(/-\s(.*?)\n/g, '<li>$1</li>') // 列表项
+                .replace(/<li>/g, '<ul style="margin: 10px 0; padding-left: 20px;"><li>')
+                .replace(/<\/li>/g, '</li></ul>');
 
-            // 模拟API请求延迟
-            setTimeout(() => {
-                const report = generateLifeReport();
-                reportContent.innerHTML = report.analysis;
+            reportDiv.innerHTML = `
+                <div class="report-section">
+                    <h3>命理分析报告</h3>
+                    <p>以下是基于您的生辰信息生成的详细命理报告：</p>
+                </div>
+                <div>${formattedContent}</div>
+            `;
 
-                loader.style.display = 'none';
-                document.getElementById('report-modal').style.display = 'block';
-            }, 1500);
+            document.getElementById('report-modal').style.display = 'block';
         }
 
         // 初始化PWA安装按钮
@@ -808,7 +879,15 @@
             document.getElementById('birthdate').valueAsDate = defaultDate;
 
             // 绑定按钮事件
-            document.getElementById('generate-btn').addEventListener('click', showLifeReport);
+            document.getElementById('generate-btn').addEventListener('click', generateLifeReport);
+
+            // 输入验证
+            const inputs = document.querySelectorAll('input, select');
+            inputs.forEach(input => {
+                input.addEventListener('input', () => {
+                    document.getElementById('error-message').style.display = 'none';
+                });
+            });
         });
 
         // 注册Service Worker
